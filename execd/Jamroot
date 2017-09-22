@@ -1,0 +1,59 @@
+local L_GIT_HASH = [ MATCH "([0-9a-f]+)" : [ SHELL "git log --pretty=oneline HEAD~1..HEAD | awk '{print $1}'" ] ] ;
+constant GIT_HASH : $(L_GIT_HASH) ;
+
+project
+    : requirements
+    <define>DAEMON="\"\\\"execd\\\"\""
+    <define>GIT_HASH="\"\\\"$(GIT_HASH)\\\"\""
+
+	<toolset>gcc:<cxxflags>-std=c++11
+    <link>static
+    <runtime-link>static
+    <variant>release
+
+    <include>${BOOST_INCLUDE}
+	<include>../include/
+    <threading>multi
+    ;
+
+searched-lib system : :
+    <name>boost_system
+	<search>${BOOST_LIB} ;
+
+searched-lib regex : :
+    <name>boost_regex
+	<search>${BOOST_LIB} ;
+
+searched-lib thread : :
+    <name>boost_thread
+	<search>${BOOST_LIB} ;
+
+searched-lib date_time : :
+    <name>boost_date_time
+	<search>${BOOST_LIB} ;
+
+alias source_files :
+	../include/processmanager.cpp
+	../include/serialization.cpp
+	../include/config_base.cpp
+	../include/http_server.cpp
+	../include/http_proto.cpp
+	../include/stat_base.cpp
+	../include/get_html.cpp
+	../include/response.cpp
+	../include/request.cpp
+	../include/stream.cpp
+	../include/config.cpp
+	../include/socket.cpp
+	../include/format.cpp
+	../include/types.cpp
+	../include/util.cpp
+	../include/log.cpp
+	stat_daemon.cpp
+	service.cpp
+	front.cpp
+	;
+
+exe execd
+    : system regex thread date_time source_files execd.cpp
+    ;

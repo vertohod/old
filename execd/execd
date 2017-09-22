@@ -1,0 +1,65 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          execd
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $network $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Should-Start:      slapd cups
+# Should-Stop:       slapd cups
+# Short-Description: Chat's daemon 
+### END INIT INFO
+
+NAME=execd
+PIDDIR=/var/run
+PIDFILE=$PIDDIR/execd.pid
+DAEMON=/usr/sbin/execd
+DAEMON_ARGS="--path-to-config=/etc/execd.cfg"
+
+[ -x "$DAEMON" ] || exit 0
+
+case $1 in
+	start)
+		# Make sure we have our PIDDIR, even if it's on a tmpfs
+		install -o root -g root -m 755 -d $PIDDIR
+
+		cp /dev/null $PIDFILE && chown execd:execd $PIDFILE
+
+		if ! start-stop-daemon --start --chuid execd --quiet --oknodo --exec $DAEMON -- $DAEMON_ARGS ; then
+			exit 1
+		fi
+
+		;;
+	stop)
+		start-stop-daemon --stop --quiet --pidfile $PIDFILE
+		# Wait a little and remove stale PID file
+		sleep 1
+		if [ -f $PIDFILE ] && ! ps h `cat $PIDFILE` > /dev/null
+		then
+			# Stale PID file, remove it (should be removed by
+			# execd itself IMHO).
+			rm -f $PIDFILE
+		fi
+
+		;;
+	reload)
+		start-stop-daemon --stop --quiet --signal HUP --pidfile $PIDFILE
+
+		;;
+	restart|force-reload)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+        status)
+		status_of_proc -p $PIDFILE $DAEMON $NAME 
+		exit $?
+		;;
+	*)
+		echo "Usage: /etc/init.d/execd {start|stop|reload|restart|force-reload|status}"
+		exit 1
+		;;
+esac
+
+exit 0

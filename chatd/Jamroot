@@ -1,0 +1,101 @@
+local L_GIT_HASH = [ MATCH "([0-9a-f]+)" : [ SHELL "git log --pretty=oneline HEAD~1..HEAD | awk '{print $1}'" ] ] ;
+constant GIT_HASH : $(L_GIT_HASH) ;
+
+project
+    : requirements
+    <define>DAEMON="\"\\\"chatd\\\"\""
+    <define>GIT_HASH="\"\\\"$(GIT_HASH)\\\"\""
+
+	<toolset>gcc:<cxxflags>-std=c++11
+    <link>static
+    <runtime-link>static
+    <variant>debug
+
+    <include>${BOOST_INCLUDE}
+	<include>../include/
+    <threading>multi
+    ;
+
+searched-lib system : :
+    <name>boost_system
+	<search>${BOOST_LIB} ;
+
+searched-lib regex : :
+    <name>boost_regex
+	<search>${BOOST_LIB} ;
+
+searched-lib thread : :
+    <name>boost_thread
+	<search>${BOOST_LIB} ;
+
+searched-lib date_time : :
+    <name>boost_date_time
+	<search>${BOOST_LIB} ;
+
+searched-lib filesystem : :
+    <name>boost_filesystem
+	<search>${BOOST_LIB} ;
+
+searched-lib tag : :
+    <name>tag
+    <search>/usr/local/lib ;
+
+searched-lib z : :
+    <name>z
+    <search>/usr/lib/x86_64-linux-gnu ;
+
+searched-lib cryptopp : :
+    <name>cryptopp
+    <search>/usr/lib ;
+
+alias source_files :
+	../include/serialization.cpp
+	../include/config_base.cpp
+	../include/http_server.cpp
+	../include/http_proto.cpp
+	../include/stat_base.cpp
+	../include/get_html.cpp
+	../include/response.cpp
+	../include/request.cpp
+	../include/crypto.cpp
+	../include/format.cpp
+	../include/stream.cpp
+	../include/config.cpp
+	../include/socket.cpp
+	../include/admin.cpp
+	../include/util.cpp
+	../include/log.cpp
+	service_messages.cpp
+	stat_daemon.cpp
+	admin_chatd.cpp
+	audio_tags.cpp
+	sessions.cpp
+	message.cpp
+	service.cpp
+	archive.cpp
+	answer.cpp
+	dumper.cpp
+	writer.cpp
+	domain.cpp
+	invite.cpp
+	avatar.cpp
+	smile.cpp
+	front.cpp
+	table.cpp
+	error.cpp
+	image.cpp
+	audio.cpp
+	video.cpp
+	room.cpp
+	;
+
+exe chatd
+    : system regex thread date_time filesystem tag z cryptopp source_files chatd.cpp
+    ;
+
+exe blizzard :
+	object.cpp
+	table.cpp
+	blizzard.cpp
+	image.cpp
+	;
