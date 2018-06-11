@@ -26,7 +26,6 @@ public:
 
 		op
 			("listen", "Port for main server", listen)
-			("upstream", "Upstream for callback", upstream)
 			("path-pid", "Path of file which content daemon's pid", path_pid)
 		;
 
@@ -39,7 +38,6 @@ public:
 	// OPTIONS --------------------------------------------------------
 
 	std::string		listen;
-	map_str_t		upstream;
 	std::string		path_pid;
 
 	// ----------------------------------------------------------------

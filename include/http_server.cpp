@@ -28,7 +28,7 @@ void http_server::handle_receive(const boost::system::error_code &err, size_t by
 			lo::l(lo::ERROR) << "Can't parse the request: " << *req.raw();
 			response res;
 			res.set_status(S500);
-			send(*res.to_raw().lock());
+			send(*res.to_raw());
 			return;
 		}
 

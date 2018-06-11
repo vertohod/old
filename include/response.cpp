@@ -10,7 +10,7 @@ bool response::parse()
 	return http_proto::parse(false);
 }
 
-wptr_cstr response::to_raw(bool include_data)
+sptr_cstr response::to_raw(bool include_data)
 {
 	return http_proto::to_raw(false, include_data);
 }
@@ -20,7 +20,7 @@ method_t response::method()
 	return http_proto::method();
 }
 
-wptr_cstr response::path()
+sptr_cstr response::path()
 {
 	return http_proto::path();
 }
@@ -35,12 +35,12 @@ status_t response::status()
 	return http_proto::status();
 }
 
-wptr_str response::raw()
+sptr_str response::raw()
 {
 	return http_proto::raw();
 }
 
-wptr_str response::data()
+sptr_str response::data()
 {
 	return http_proto::data();
 }

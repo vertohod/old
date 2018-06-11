@@ -6,13 +6,12 @@ project
     <define>DAEMON="\"\\\"lotteryd\\\"\""
     <define>GIT_HASH="\"\\\"$(GIT_HASH)\\\"\""
 
-	<toolset>gcc:<cxxflags>-std=c++11
+	<toolset>gcc:<cxxflags>-std=c++14
     <link>static
     <runtime-link>static
     <variant>release
 
-    <include>${BOOST_INCLUDE}
-	<include>../include/
+    <include>../include
     <threading>multi
     ;
 
@@ -33,13 +32,11 @@ searched-lib date_time : :
 	<search>${BOOST_LIB} ;
 
 alias source_files :
-	../include/processmanager.cpp
 	../include/serialization.cpp
 	../include/config_base.cpp
 	../include/http_server.cpp
 	../include/http_proto.cpp
 	../include/stat_base.cpp
-	../include/get_html.cpp
 	../include/response.cpp
 	../include/request.cpp
 	../include/stream.cpp

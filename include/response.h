@@ -9,15 +9,15 @@ public:
 	response();
 
 	bool parse();
-	wptr_cstr to_raw(bool include_data = true);
+	sptr_cstr to_raw(bool include_data = true);
 
     method_t method();
-    wptr_cstr path();
+    sptr_cstr path();
     ver_t ver();
     status_t status();
 
-    wptr_str raw();
-    wptr_str data();
+    sptr_str raw();
+    sptr_str data();
 
     template <typename T>
     T header(const std::string& key, const T& val)
